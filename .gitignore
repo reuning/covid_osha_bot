@@ -2,3 +2,5 @@ config.py
 all_data_fin.csv
 .spyproject
 covidbot.pem
+company_name.csv
+.DS_Store
