@@ -4,3 +4,4 @@ all_data_fin.csv
 covidbot.pem
 company_name.csv
 .DS_Store
+__pycache__
