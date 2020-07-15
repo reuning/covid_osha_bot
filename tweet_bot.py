@@ -10,7 +10,8 @@ import pandas as pd
 import textwrap 
 from TwitterAPI import TwitterAPI
 import config 
-import time
+import json 
+
 from io import BytesIO
 
 from PIL import Image, ImageDraw, ImageFont
@@ -23,7 +24,6 @@ api = TwitterAPI(config.key,
                 config.access_secret)
 
 
-wrapper = textwrap.TextWrapper(width=50)
 byte_io = BytesIO()
 
 df = pd.read_csv("tweets.csv")
@@ -41,9 +41,12 @@ while True:
 
 
 message = tweet_row.Tweet.iloc[0]
+caption = message
 
 if(len(message) > 250):
-    message = "\n".join(wrapper.wrap(tweet_row.Tweet.iloc[0]))
+    wrap_width = int(max(50,len(message)/15))
+
+    message = "\n".join(textwrap.wrap(message, width=wrap_width))
     width = 1200
     height = 675
     img = Image.new('RGB', (width, height), color=(40, 60, 140))
@@ -78,9 +81,9 @@ if(len(message) > 250):
                         align='right', font=font, 
                         fill='white')
     
-    img.save("tmp.PNG",
-             dpi=(300,300), optimize=True, 
-             compress_level=4) # save it
+    # img.save("tmp.PNG",
+    #          dpi=(300,300), optimize=True, 
+    #          compress_level=4) # save it
     img.save(byte_io, "PNG",
              dpi=(300,300), optimize=True, 
              compress_level=4) # save it
@@ -95,9 +98,9 @@ if(len(message) > 250):
         media_id = r.json()['media_id']
         
         # r = api.request('media/metadata/create', 
-        #                 {'media_id':media_id,
-        #                  "alt_text": {
-        #                      "text": caption[0:999]} })
+        #                 {'media_ids':str(media_id),
+        #                   "alt_text": { "text": caption[0:999]} })
+                 
         r = api.request('statuses/update', 
                         {'status': status, 'media_ids': media_id})
 else:
@@ -105,6 +108,7 @@ else:
     r = api.request('statuses/update', 
                 {'status': message})
         
+
 
 
 
