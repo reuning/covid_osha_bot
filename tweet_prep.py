@@ -17,11 +17,12 @@ df = df.dropna(subset= ['City','State','Hazard.Desc.and.Location'])
 df['Trimmed_Address'] = df.Address.str.extract("(.*?) [0-9|$]")
 df.Trimmed_Address = df.Trimmed_Address.apply(lambda x: 
                                               " ".join(str(x).split(" ")[:4]))
-    
+
+df['Date'] = pd.to_datetime(df['Receipt.Date'])
     
 df['Tweet'] = ('"' + df['Hazard.Desc.and.Location'] + '" - ' + 
                df.Trimmed_Address + " in " + df.City + ", " + 
-               df.State)
+               df.State + ' reported on ' + df.Date.dt.strftime('%b %d'))
 df_out = df[['Tweet', 'Act.ID']]
 
 df_out.columns = ['Tweet', 'ID']
