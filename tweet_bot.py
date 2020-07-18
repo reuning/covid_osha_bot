@@ -31,7 +31,7 @@ df_past = pd.read_csv("tweeted.csv")
 
 
 while True:
-    tweet_row = df.sample(1)
+    tweet_row = df.sample(1, weights='Weight')
     
     if tweet_row.ID.values[0] not in df_past.ID.values:
         df_past = pd.concat([df_past.ID, tweet_row.ID])
@@ -110,6 +110,9 @@ else:
         
 
 
+r = api.request('media/metadata/create', 
+                {'media_ids':str(media_id),
+                  "alt_text": { "text": caption[0:999]} })
 
 
 
