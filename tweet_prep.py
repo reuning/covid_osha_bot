@@ -10,17 +10,28 @@ import pandas as pd
 
 
 
+
 df = pd.read_csv("all_data_fin.csv")
+
+
+
+
+df['City'] = df.formatted_address.str.extract(r", ([\w .]*?), ([A-Z]{2}|[0-9]{5})").iloc[:,0]
+
+
 df = df.dropna(subset= ['City','State','Hazard.Desc.and.Location'])
 
 
-df['Trimmed_Address'] = df.Address.str.extract("(.*?) [0-9|$]")
+df['Trimmed_Address'] = df['Establishment.Name.Site.City.State.Zip'].str.extract("(.*?)\n")
 df.Trimmed_Address = df.Trimmed_Address.apply(lambda x: 
                                               " ".join(str(x).split(" ")[:4]))
 
 df['Date'] = pd.to_datetime(df['Receipt.Date'])
 
 df['Weight'] = (df.Date - min(df.Date)).dt.days + 1
+counts = df.pivot_table(index=['Weight'],aggfunc='size')
+df.Weight = df.Weight.values * counts[df.Weight].values
+
 df.Weight = df.Weight/sum(df.Weight)
 
 
