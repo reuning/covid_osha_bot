@@ -9,15 +9,9 @@ Created on Mon Jul  6 07:21:38 2020
 import pandas as pd 
 
 
-
-
 df = pd.read_csv("all_data_fin.csv")
 
-
-
-
 df['City'] = df.formatted_address.str.extract(r", ([\w .]*?), ([A-Z]{2}|[0-9]{5})").iloc[:,0]
-
 
 df = df.dropna(subset= ['City','State','Hazard.Desc.and.Location'])
 
@@ -29,8 +23,9 @@ df.Trimmed_Address = df.Trimmed_Address.apply(lambda x:
 df['Date'] = pd.to_datetime(df['Receipt.Date'])
 
 df['Weight'] = (df.Date - min(df.Date)).dt.days + 1
+df = df.sort_values(by="Weight", ascending=False)
 counts = df.pivot_table(index=['Weight'],aggfunc='size')
-df.Weight = df.Weight.values * counts[df.Weight].values
+df.Weight = df.Weight.values / counts[df.Weight].values
 
 df.Weight = df.Weight/sum(df.Weight)
 
