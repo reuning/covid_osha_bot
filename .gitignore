@@ -4,4 +4,5 @@ all_data_fin.csv
 covidbot.pem
 company_name.csv
 .DS_Store
+.ipynb_checkpoints/*
 __pycache__

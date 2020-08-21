@@ -30,9 +30,15 @@ df.Weight = df.Weight.values / counts[df.Weight].values
 df.Weight = df.Weight/sum(df.Weight)
 
 
-df['Tweet'] = ('"' + df['Hazard.Desc.and.Location'] + '" - ' + 
-               df.Trimmed_Address + " in " + df.City + ", " + 
-               df.State + ' reported on ' + df.Date.dt.strftime('%b %d'))
+df['Tweet'] = ("Report from an employee at " + df.Trimmed_Address + 
+               " in " + df.City + ", " + df.State + " on " +              
+               df.Date.dt.strftime('%b %d') + ': "' +
+               df['Hazard.Desc.and.Location'] + '"')
+
+# df['Tweet'] = ('"' + df['Hazard.Desc.and.Location'] + '" - ' + 
+#                df.Trimmed_Address + " in " + df.City + ", " + 
+#                df.State + ' reported on ' + df.Date.dt.strftime('%b %d'))
+
 df_out = df[['Tweet', 'Act.ID', 'Weight']]
 
 df_out.columns = ['Tweet', 'ID', 'Weight']
